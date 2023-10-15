@@ -1,7 +1,7 @@
 from gtts import gTTS
 import os
 
-text = input("Speak: ")
+text = "Hello. It's nice to meet you. I'm Daisy, an advanced robotic dog. I've been designed to assist you as your receptionist and companion. Please bear with me for a moment as I initiate all my services. Once I'm up and running, we can connect seamlessly. Please wait."
 language = 'en'
 
 
@@ -15,5 +15,5 @@ os.system("rm " + file_name + ".mp3")
 
 
 # SSH into the robot dog
-os.system("sshpass -p 123 scp -r " + file_name +
-          ".wav unitree@192.168.123.13:/home/unitree")
+# os.system("sshpass -p 123 scp -r " + file_name +
+#          ".wav unitree@192.168.123.13:/home/unitree")
