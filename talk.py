@@ -1,7 +1,7 @@
 from gtts import gTTS
 import os
 
-text = "Hello. It's nice to meet you. I'm Daisy, an advanced robotic dog. I've been designed to assist you as your receptionist and companion. Please bear with me for a moment as I initiate all my services. Once I'm up and running, we can connect seamlessly. Please wait."
+text = "Please observe me carefully as I execute a graceful twist to the right, for this motion reflects my impeccable sense of balance and versatility of my character as a robot."
 language = 'en'
 
 
