@@ -30,7 +30,7 @@ class WiFi:
 
 		    # Printing the ASCII art
 		    print(dog_wifi_ascii)
-		    print("++++ Dog WiFi ++++")
+		    print("+++++++++++++++++++++ Dog WiFi +++++++++++++++++++++")
 		    stage = input("Which WiFi stage are you in? (1 or 2):")
 
 		    if stage == "1":
@@ -39,9 +39,11 @@ class WiFi:
 		    elif stage == "2":
 		        self.begin_stage2()
 		        break
+		    elif stage == "exit":
+		    	sys.exit()
 		    else:
 		        print("Error: wrong input. Type '1' or '2' ")      
-
+		        print("+++++++++++++++++++++ Dog WiFi +++++++++++++++++++++")
 
 wifi = WiFi()
 wifi.start()
