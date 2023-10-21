@@ -8,7 +8,14 @@ class WiFi:
         pass
 
     def begin_stage1(self):
-        print("Stage 1 has been selected")
+        print("\033[92mStage 1 is about to start...\033[0m")
+        # Allow forwarding on the raspberry pi
+        print("\033[92mEnabling port forwarding on the Pi...\033[0m")
+        subprocess.run(['sysctl', '-w', 'net.ipv4.ip_forward=1'])
+        print("\033[92mDone.\033[0m")
+        print("\033[92mPutting all nano traffic behind the Pi...\033[0m")
+
+
 
     def begin_stage2(self):
         print("Stage 2 has been selected")
