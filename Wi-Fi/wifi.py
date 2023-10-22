@@ -20,17 +20,35 @@ class WiFi:
                        '-m', 'state', '--state', 'RELATED,ESTABLISHED', '-j', 'ACCEPT'])
         subprocess.run(['ifconfig', 'wlan2', 'up'])
 
+    def remove_default_gateway(self):
+        subprocess.run(['ip', 'r', 'd', 'default', 'via', '192.168.123.1'])
+        subprocess.run(['ip', 'r', 'd', 'default', 'via', '192.168.12.1'])
+
     def begin_stage1(self):
         print("\033[92mStage 1 is about to start...\033[0m")
         # Allow forwarding on the raspberry pi
         print("\033[92mEnabling port forwarding on the Pi...\033[0m")
-        self.ip_forward()
-        if subprocess.run(['sysctl', '-n', 'net.ipv4.ip_forward']).returncode == 0:
-            print("\033[92mDone.\033[0m")
-        else:
+        try:
+            self.ip_forward()
+
+        except Exception:
             print("\033[91mIP forwarding Failed.\033[0m")
+        else:
+            print("\033[92mIP forwarding enabled.\033[0m")
         print("\033[92mPutting all nano traffic behind the Pi...\033[0m")
-        self.masquerade_nano_traffic()
+        try:
+            self.masquerade_nano_traffic()
+        except Exception:
+            print("\033[91mPutting nano traffic behind the Pi Failed.\033[0m")
+        else:
+            print("\033[92mAll nano traffic is behind the Pi.\033[0m")
+        print("\033[92mRemoving default gateway...\033[0m")
+        try:
+            self.remove_default_gateway()
+        except Exception:
+            print("\033[91mRemoving default gateway Failed.\033[0m")
+        else:
+            print("\033[92mDefault gateway removed.\033[0m")
 
     def begin_stage2(self):
         print("Stage 2 has been selected")
