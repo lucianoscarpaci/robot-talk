@@ -24,13 +24,16 @@ class WiFi:
         subprocess.run(['ip', 'r', 'd', 'default', 'via', '192.168.123.1'])
         subprocess.run(['ip', 'r', 'd', 'default', 'via', '192.168.12.1'])
 
+    def show_new_gateway(self):
+        print("\033[92m" + subprocess.run("ip route | grep 'dhcp src'",
+              shell=True, capture_output=True, text=True).stdout.strip() + "\033[0m")
+
     def begin_stage1(self):
         print("\033[92mStage 1 is about to start...\033[0m")
         # Allow forwarding on the raspberry pi
         print("\033[92mEnabling port forwarding on the Pi...\033[0m")
         try:
             self.ip_forward()
-
         except Exception:
             print("\033[91mIP forwarding Failed.\033[0m")
         else:
@@ -49,6 +52,13 @@ class WiFi:
             print("\033[91mRemoving default gateway Failed.\033[0m")
         else:
             print("\033[92mDefault gateway removed.\033[0m")
+        print("\033[92mShowing new gateway...\033[0m")
+        try:
+            self.show_new_gateway()
+        except Exception:
+            print("\033[91mShowing new gateway Failed.\033[0m")
+        else:
+            print("\033[92mDone. Please reconnect through Ethernet.\033[0m")
 
     def begin_stage2(self):
         print("Stage 2 has been selected")
