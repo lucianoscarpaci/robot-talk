@@ -1,7 +1,7 @@
 from gtts import gTTS
 import os
 
-text = "Please observe me carefully as I execute a graceful twist to the right, for this motion reflects my impeccable sense of balance and versatility of my character as a robot."
+text = "Let's boogie! show me your moves! Wub-a-dub-dub, let have some fun! robot dog shaking it up!"
 language = 'en'
 
 

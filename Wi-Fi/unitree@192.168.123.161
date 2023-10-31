@@ -51,7 +51,7 @@ class WiFi:
     def enable_vnc_server(self) -> bool:
         try:
             subprocess.run(['iptables', '-t', 'nat', '-A', 'PREROUTING', '-p', 'tcp', '-i', 'wlan2',
-                           '--dport', '5913', '-j', 'DNAT', '--to-destination', '192.168.123.161:5900'])
+                           '--dport', '5913', '-j', 'DNAT', '--to-destination', '192.168.123.13:5900'])
         except Exception:
             print("\033[91mEnabling the VNC Failed.\033[0m")
             return False
