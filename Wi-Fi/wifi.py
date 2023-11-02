@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import os
 
 
 class WiFi:
@@ -48,16 +49,21 @@ class WiFi:
         print("\033[92m" + subprocess.run("ip route | grep 'dhcp src'",
               shell=True, capture_output=True, text=True).stdout.strip() + "\033[0m")
 
-    def enable_vnc_server(self) -> bool:
-        try:
-            subprocess.run(['iptables', '-t', 'nat', '-A', 'PREROUTING', '-p', 'tcp', '-i', 'wlan2',
-                           '--dport', '5913', '-j', 'DNAT', '--to-destination', '192.168.123.161:5900'])
-        except Exception:
-            print("\033[91mEnabling the VNC Failed.\033[0m")
-            return False
-        else:
-            print("\033[92mVNC server enabled.\033[0m")
-            return True
+    def install_packages(self) -> bool:
+        packages = ["dlib==19.24.0", "face-recognition==1.3.0",
+                    "numpy==1.24.2", "Pillow==9.4.0"]
+
+        save_location = os.path.expanduser("~/Desktop")
+
+        for package in packages:
+            try:
+                subprocess.check_call(
+                    ["pip3", "download", "--destination-directory", save_location, package])
+            except Exception:
+                print(f"Failed to install package: {package}")
+                return False
+
+        return True
 
     def begin_stage1(self):
         print("\033[92mStage 1 is about to start...\033[0m")
@@ -72,7 +78,7 @@ class WiFi:
         self.show_new_gateway()
         # check code until this point
         print("\033[92mEnabling VNC...")
-        self.enable_vnc_server()
+        self.install_packages()
 
     def begin_stage2(self):
         print("Stage 2 has been selected")
