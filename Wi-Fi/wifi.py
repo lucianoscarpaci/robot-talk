@@ -7,11 +7,11 @@ import time
 class WiFi:
 
     def __init__(self):
-        pass
+        self.go = subprocess.run
 
     def ip_forward(self) -> bool:
         try:
-            subprocess.run(['sysctl', '-w', 'net.ipv4.ip_forward=1'])
+            self.go(['sysctl', '-w', 'net.ipv4.ip_forward=1'])
         except Exception:
             print("\033[91mIP forwarding Failed.\033[0m")
             return False
@@ -21,13 +21,13 @@ class WiFi:
 
     def masquerade_nano_traffic(self) -> bool:
         try:
-            subprocess.run(['iptables', '-t', 'nat', '-A',
-                           'POSTROUTING', '-o', 'wlan2', '-j', 'MASQUERADE'])
-            subprocess.run(['iptables', '-A', 'FORWARD', '-i',
-                           'eth0', '-o', 'wlan2', '-j', 'ACCEPT'])
-            subprocess.run(['iptables', '-A', 'FORWARD', '-i', 'wlan2', '-o', 'eth0',
-                           '-m', 'state', '--state', 'RELATED,ESTABLISHED', '-j', 'ACCEPT'])
-            subprocess.run(['ifconfig', 'wlan2', 'up'])
+            self.go(['iptables', '-t', 'nat', '-A',
+                     'POSTROUTING', '-o', 'wlan2', '-j', 'MASQUERADE'])
+            self.go(['iptables', '-A', 'FORWARD', '-i',
+                     'eth0', '-o', 'wlan2', '-j', 'ACCEPT'])
+            self.go(['iptables', '-A', 'FORWARD', '-i', 'wlan2', '-o', 'eth0',
+                     '-m', 'state', '--state', 'RELATED,ESTABLISHED', '-j', 'ACCEPT'])
+            self.go(['ifconfig', 'wlan2', 'up'])
         except Exception:
             print("\033[91mPutting nano traffic behind the Pi Failed.\033[0m")
             return False
@@ -37,8 +37,8 @@ class WiFi:
 
     def remove_default_gateway(self) -> bool:
         try:
-            subprocess.run(['ip', 'r', 'd', 'default', 'via', '192.168.123.1'])
-            subprocess.run(['ip', 'r', 'd', 'default', 'via', '192.168.12.1'])
+            self.go(['ip', 'r', 'd', 'default', 'via', '192.168.123.1'])
+            self.go(['ip', 'r', 'd', 'default', 'via', '192.168.12.1'])
         except Exception:
             print("\033[91mRemoving default gateway Failed.\033[0m")
             return False
@@ -47,7 +47,7 @@ class WiFi:
             return True
 
     def show_new_gateway(self):
-        print("\033[92m" + subprocess.run("ip route | grep 'dhcp src'",
+        print("\033[92m" + self.go("ip route | grep 'dhcp src'",
               shell=True, capture_output=True, text=True).stdout.strip() + "\033[0m")
 
     def begin_stage1(self):
@@ -78,7 +78,7 @@ class WiFi:
         print("\033[92mWi-Fi has been enabled...\033[0m")
 
     def start(self):
-            dog_wifi_ascii = '''
+        dog_wifi_ascii = '''
 		                / \__
 		               (    @\___
 		               /         O
@@ -91,12 +91,12 @@ class WiFi:
 		          /__\__/___|
 		    '''
 
-            # Printing the ASCII art
-            print("\033[94m" + dog_wifi_ascii + "\033[0m")
-            print(
-                "\033[94m+++++++++++++++++++++ Dog WiFi +++++++++++++++++++++\033[0m")
+        # Printing the ASCII art
+        print("\033[94m" + dog_wifi_ascii + "\033[0m")
+        print(
+            "\033[94m+++++++++++++++++++++ Dog WiFi +++++++++++++++++++++\033[0m")
 
-            self.begin_stage1()
+        self.begin_stage1()
 
 
 wifi = WiFi()
