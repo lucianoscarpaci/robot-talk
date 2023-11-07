@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import os
+import time
 
 
 class WiFi:
@@ -49,24 +50,7 @@ class WiFi:
         print("\033[92m" + subprocess.run("ip route | grep 'dhcp src'",
               shell=True, capture_output=True, text=True).stdout.strip() + "\033[0m")
 
-    def install_packages(self) -> bool:
-        packages = ["dlib==19.24.0", "face-recognition==1.3.0",
-                    "numpy==1.24.2", "Pillow==9.4.0"]
-
-        save_location = os.path.expanduser("~/Desktop")
-
-        for package in packages:
-            try:
-                subprocess.check_call(
-                    ["pip3", "download", "--destination-directory", save_location, package])
-            except Exception:
-                print(f"Failed to install package: {package}")
-                return False
-
-        return True
-
     def begin_stage1(self):
-        print("\033[92mStage 1 is about to start...\033[0m")
         # Allow forwarding on the raspberry pi
         print("\033[92mEnabling port forwarding on the Pi...\033[0m")
         self.ip_forward()
@@ -76,15 +60,24 @@ class WiFi:
         self.remove_default_gateway()
         print("\033[92mShowing new gateway...\033[0m")
         self.show_new_gateway()
+        print("\033[92mPlease wait...\033[0m")
         # check code until this point
-        print("\033[92mEnabling VNC...")
-        self.install_packages()
+        time.sleep(15)
+        print("\033[92mEnabling Wi-Fi...\033[0m")
+        self.begin_stage2()
 
     def begin_stage2(self):
-        print("Stage 2 has been selected")
+        print("\033[92mEnabling port forwarding on the Pi...\033[0m")
+        self.ip_forward()
+        print("\033[92mPutting all nano traffic behind the Pi...\033[0m")
+        self.masquerade_nano_traffic()
+        print("\033[92mRemoving default gateway...\033[0m")
+        self.remove_default_gateway()
+        print("\033[92mShowing new gateway...\033[0m")
+        self.show_new_gateway()
+        print("\033[92mWi-Fi has been enabled...\033[0m")
 
     def start(self):
-        while True:
             dog_wifi_ascii = '''
 		                / \__
 		               (    @\___
@@ -102,21 +95,8 @@ class WiFi:
             print("\033[94m" + dog_wifi_ascii + "\033[0m")
             print(
                 "\033[94m+++++++++++++++++++++ Dog WiFi +++++++++++++++++++++\033[0m")
-            stage = input(
-                "\033[92mWhich WiFi stage are you in? (1 or 2):\033[0m")
 
-            if stage == "1":
-                self.begin_stage1()
-                break
-            elif stage == "2":
-                self.begin_stage2()
-                break
-            elif stage == "exit":
-                sys.exit()
-            else:
-                print("\033[91mError: wrong input. Type '1' or '2' \033[0m")
-                print(
-                    "\033[94m+++++++++++++++++++++ Dog WiFi +++++++++++++++++++++\033[0m")
+            self.begin_stage1()
 
 
 wifi = WiFi()
